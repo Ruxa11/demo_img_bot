@@ -1,5 +1,8 @@
 process.env.NTBA_FIX_319 = 1
 process.env.PORT || 3000
+require('https').createServer().listen(process.env.PORT || 5000).on('request', function(req, res){
+    res.end('')
+  })
 const TelegramBot = require('node-telegram-bot-api')
 const gis = require('g-i-s')
 const axios = require('axios')
@@ -9,10 +12,6 @@ const messages = require('./messages.json')
 const token = '1600341732:AAFb1tyWcIcKeaCo20nN5R-pbISAjCvOleA'
 
 const bot = new TelegramBot(token, {polling: true})
-
-require('https').createServer().listen(process.env.PORT || 5000).on('request', function(req, res){
-    res.end('')
-  })
 
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id
