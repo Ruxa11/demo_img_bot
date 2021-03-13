@@ -1,4 +1,5 @@
 process.env.NTBA_FIX_319 = 1
+process.env.PORT || 3000
 const TelegramBot = require('node-telegram-bot-api')
 const gis = require('g-i-s')
 const axios = require('axios')
@@ -45,14 +46,17 @@ bot.onText(/\/start/, (msg) => {
             }
 
             Promise.all(imagesLinkArray).then(async result => {
-                if (!result.includes(text)) {
-                    await bot.sendMediaGroup(chatId, result)
-                } else {
-                    await bot.sendMessage(chatId, text)
+                try {
+                    if (!result.includes(text)) {
+                        await bot.sendMediaGroup(chatId, result)
+                    } else {
+                        await bot.sendMessage(chatId, text)
+                    }
+                } catch {
+                    bot.sendMessage(chatId, messages.newSearch, {reply_markup: {
+                        inline_keyboard: [[{text: '🔎 Поиск', callback_data: 'search'}]]
+                    }})
                 }
-                bot.sendMessage(chatId, messages.newSearch, {reply_markup: {
-                    inline_keyboard: [[{text: '🔎 Поиск', callback_data: 'search'}]]
-                }})
             })
         })
     }
